@@ -1,4 +1,4 @@
-# leetcode-summerizer
+# Leetcode-Summarizer 1.0
 Summarize and collect into a DB a collection of LeetCode problems (Description, Solutions, Code, Analysis)
 
 ## 📣 News
@@ -37,18 +37,23 @@ This project harnesses the power of OpenAI's GPT models to summarize LeetCode pr
    - Run the main script: `python main.py`
    - Make sure you have your problem inputs ready in `prompt_arguments.csv`.
 
+6. **File Structure and Data Schemas:**
+   - `app.log`: Logs all runtime information, including progress updates and errors. Data schema: Timestamp, Log Level, Message.
+   - `prompts.log`: Stores detailed prompt templates used for each request. Data schema: Prompt Template, Problem.
+   - `prompt_arguments.csv`: Input file containing LeetCode problem descriptions. Should have a header named "problem" followed by rows containing individual problem descriptions or titles.
+
 ### Open AI Platform Issues
 
-#### ChatGPT API Setup Challenges
-- **New API endpoint updates:**
-    - The current endpoint used in this code is "https://api.openai.com/v1/chat/completions".
-    - This endpoint is one of the options for both "gpt-3.5-turbo" (default in this code) and "gpt-4" models.
-    - Each endpoint supports only a certain class of models.
-    - Explore the latest "endpoints" and their compatible models in [Open AI's platform documentation](https://platform.openai.com/docs/models/model-endpoint-compatibility).
-- **New format for request message (currently ChatML format).**
-- **You have to upgrade to a paid account and add credits to your account:**
-    - There’s a known bug with the payment system. You may get the "Error 429 Too Many Requests" from Open AI Api while adding your payment method. You may need to install a VPN (as I did as the last solution) to get around this issue [Link: https://techviral.net/chatgpt-error-429-too-many-requests/], or wait for it to be resolved, hopefully soon.
-- **You need to re-generate your Open AI key after upgrading the billing account and store the new API key in your bash_profile for use in the python code. Otherwise, you will get the error "404 Client Error: Not Found for url: https://api.openai.com/v1/completions".**
+- **ChatGPT API Setup Challenges**
+  - **New API endpoint updates:**
+      - The current endpoint used in this code is "https://api.openai.com/v1/chat/completions".
+      - This endpoint is one of the options for both "gpt-3.5-turbo" (default in this code) and "gpt-4" models.
+      - Each endpoint supports only a certain class of models.
+      - Explore the latest "endpoints" and their compatible models in [Open AI's platform documentation](https://platform.openai.com/docs/models/model-endpoint-compatibility).
+  - **New format for request message (currently ChatML format).**
+  - **You have to upgrade to a paid account and add credits to your account:**
+      - There’s a known bug with the payment system. You may get the `Error 429 Too Many Requests` from Open AI Api while adding your payment method. You may need to install a VPN (as I did as the last solution) to get around this issue ([Link](https://techviral.net/chatgpt-error-429-too-many-requests/)), or wait for it to be resolved, hopefully soon!
+  - **You need to re-generate your Open AI key after upgrading the billing account and store the new API key in your bash_profile for use in the python code. Otherwise, you will get the error `404 Client Error: Not Found for url: https://api.openai.com/v1/completions`**.
 
 ## 💻 Recommended Code Editor
 
@@ -56,8 +61,21 @@ This project harnesses the power of OpenAI's GPT models to summarize LeetCode pr
 
 ## 🎶 A Fun Fact
 
-- This README and the accompanying code were crafted while listening to some energetic techno beats! Techno is love ❤️. Check out some of my DJ mixes (Organic House, and Melodic House and Techno) [here on Soundcloud](https://soundcloud.com/alireza_deer)!
+- 🎧: This README and the accompanying code were crafted while listening to some energetic techno beats! 🎶 Techno is love ❤️. 
+  - <img src="image.png" alt="Alt text" style="width: 20px; height: 20px;"> Check out some of my DJ mixes (Organic House, Melodic House and Techno) [here on Soundcloud](https://soundcloud.com/alirezadir)!
+- 🎧🎵 My current favorite track: [Simulation](https://open.spotify.com/playlist/3p52wFvY1hYMzjQJnkkfxW) *by "Anyma & Chris Avantgarde".*
 
 ## 🙌 Credits
 
 - This project was created with assistance from my ChatGPT assistant, who was indispensable in writing the code and crafting this README.
+
+## 🌟 Gratitude 
+
+🙏 I am deeply grateful for being where I am today and for the opportunity to share this work with you all. 🌍 It's been a long, challenging journey filled with excitement from the start to this point. I am thankful for all the gifts that the universe has brought to me, and I've discovered that living with gratitude is a profoundly transformative way of life. 🌈
+
+> To speak gratitude is courteous and pleasant, to enact gratitude is generous and noble, but to live gratitude is to touch Heaven. – Johannes A. Gaertner (*German Art Historian, Professor of Art History*)
+
+🙏 Special thanks go to my very close friends who have always supported me throughout my journey. 
+
+🙏 I am also eternally grateful to all my teachers who have guided me from the very beginning until now. Their wisdom and support have been invaluable.
+
