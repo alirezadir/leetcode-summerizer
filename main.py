@@ -27,9 +27,13 @@ import os
 import logging
 import csv
 
+# Create directories for logs and output if they do not exist
+os.makedirs('./logs', exist_ok=True)
+os.makedirs('./output', exist_ok=True)
+
 # Setup logging to both file and console
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-fh = logging.FileHandler('app.log')  # File handler for logging to a file
+fh = logging.FileHandler('./logs/app.log')  # File handler for logging to a file
 fh.setLevel(logging.INFO)
 ch = logging.StreamHandler()  # Console handler for logging to the console
 ch.setLevel(logging.INFO)
@@ -41,7 +45,7 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 
 # Function to log the prompt templates and arguments
-def store_prompt_log(prompt_template, problem, filename='prompts.log'):
+def store_prompt_log(prompt_template, problem, filename='./logs/prompts.log'):
     with open(filename, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([prompt_template, problem])
@@ -107,7 +111,7 @@ def call_chatgpt_api(prompt):
         return None
 
 # Function to store the response in a CSV file with a problem number
-def store_response_csv(problem_number, problem, response, filename='chatgpt_responses.csv'):
+def store_response_csv(problem_number, problem, response, filename='./output/chatgpt_responses.csv'):
     with open(filename, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([problem_number, problem, response])  # Storing problem number, problem, and response
@@ -120,11 +124,11 @@ def main():
         prompts_df = pd.read_csv('prompt_arguments.csv')
 
         # Initialize CSV files with headers
-        with open('chatgpt_responses.csv', mode='w', newline='', encoding='utf-8') as file:
+        with open('./output/chatgpt_responses.csv', mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(['No.', 'problem', 'response'])  # Header for response CSV
 
-        with open('prompts.log', mode='w', newline='', encoding='utf-8') as file:
+        with open('./logs/prompts.log', mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(['prompt_template', 'problem'])  # Header for prompt log CSV
 
@@ -148,7 +152,7 @@ def main():
         logging.info(
            "Main function finished successfully! "
             "Note: this doesn't necessarily indicate task success! "
-            "Check the app.log and chatgpt_responses.csv file for results!"
+            "Check the logs/app.log and output/chatgpt_responses.csv file for results!"
         )
     except Exception as e:
         logging.error(f"Error in main function: {e}")

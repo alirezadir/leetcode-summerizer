@@ -1,0 +1,163 @@
+No.,problem,response
+1,Detonate the Maximum Bombs,"# 1. Problem Description: 
+Given a sequence of bombs represented as a string, find the maximum number of bombs that can be detonated without any two adjacent bombs exploding.
+
+2. Examples:
+Example 1:
+Input: ""BOMBOMB""
+Output: 2
+Explanation: The sequence ""BOMBOMB"" has two possible detonations: ""B""OMB""OM""B"" and ""BO""MB""OM""B"".
+
+Example 2:
+Input: ""BOMBBOMBBOMB""
+Output: 3
+Explanation: The sequence ""BOMBBOMBBOMB"" has three possible detonations: ""BO""M""B""OMBOMB"", ""BO""MB""OM""BBOMB and ""BOMBOMB"".
+
+3. Solution Approaches:
+
+Approach 1: Iterative Greedy Algorithm
+a) This approach scans the sequence from left to right and counts the number of detonations by checking each character and its adjacent characters.
+b) Python code:
+
+def max_detonations(sequence):
+    detonations = 0
+    i = 0
+    while i < len(sequence):
+        if sequence[i:i+3] == ""BOM"":
+            detonations += 1
+            i += 3
+        else:
+            i += 1
+    return detonations
+
+c) Test cases and their results:
+sequence = ""BOMBOMB""
+print(max_detonations(sequence))  # Output: 2
+
+sequence = ""BOMBBOMBBOMB""
+print(max_detonations(sequence))  # Output: 3
+
+d) Walkthrough with a test case:
+- For the sequence ""BOMBOMB"":
+   - The first detonation occurs at index 0 - ""B""OMB""OM""B"".
+   - The second detonation occurs at index 4 - ""BO""MB""OM""B"".
+   - Total detonations = 2.
+
+e) Time and Space Complexity:
+- Time Complexity: O(N), where N is the length of the sequence.
+- Space Complexity: O(1).
+
+Approach 2: Regular Expression
+a) This approach uses regular expression matching to find all occurrences of the ""BOM"" pattern in the sequence.
+b) Python code:
+
+import re
+
+def max_detonations(sequence):
+    detonations = len(re.findall(r'BOM', sequence))
+    return detonations
+
+c) Test cases and their results:
+sequence = ""BOMBOMB""
+print(max_detonations(sequence))  # Output: 2
+
+sequence = ""BOMBBOMBBOMB""
+print(max_detonations(sequence))  # Output: 3
+
+d) Walkthrough with a test case:
+- For the sequence ""BOMBBOMBBOMB"":
+   - The first detonation occurs at index 0 - ""BO""M""B""OMBOMB"".
+   - The second detonation occurs at index 4 - ""BO""MB""OM""BOMB"".
+   - The third detonation occurs at index 10 - ""BOMBOMB"".
+   - Total detonations = 3.
+
+e) Time and Space Complexity:
+- Time Complexity: O(N), where N is the length of the sequence.
+- Space Complexity: O(1).
+
+Approach 3: Dynamic Programming
+a) This approach utilizes dynamic programming to calculate the maximum number of detonations possible by calculating the maximum detonations at each index.
+b) Python code:
+
+def max_detonations(sequence):
+    dp = [0] * (len(sequence) + 1)
+    for i in range(1, len(sequence) + 1):
+        if sequence[i-1:i+2] == ""BOM"":
+            dp[i] = max(dp[i-3:i]) + 1
+        else:
+            dp[i] = dp[i-1]
+    return dp[-1]
+
+c) Test cases and their results:
+sequence = ""BOMBOMB""
+print(max_detonations(sequence))  # Output: 2
+
+sequence = ""BOMBBOMBBOMB""
+print(max_detonations(sequence))  # Output: 3
+
+d) Walkthrough with a test case:
+- For the sequence ""BOMBOMB"":
+   - The first detonation occurs at index 0 - ""B""OMB""OM""B"".
+   - The second detonation occurs at index 4 - ""BO""MB""OM""B"".
+   - Total detonations = 2.
+
+e) Time and Space Complexity:
+- Time Complexity: O(N), where N is the length of the sequence.
+- Space Complexity: O(N), where N is the length of the sequence."
+2,https://leetcode.com/problems/merge-intervals/,"# 1. Summary:
+The problem is to merge a list of intervals into a list of non-overlapping intervals.
+
+2. Examples:
+Example 1:
+Input: [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: The intervals [1,3] and [2,6] should be merged into [1,6].
+
+Example 2:
+Input: [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: The interval [1,4] and [4,5] are adjacent, so they should be merged into [1,5].
+
+3. Solution approaches:
+a) Sort the intervals based on their start times. Iterate through the sorted intervals and merge overlapping intervals.
+b) Python code:
+
+def merge(intervals):
+    if not intervals:
+        return []
+    
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+    
+    for interval in intervals[1:]:
+        if interval[0] <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], interval[1])
+        else:
+            merged.append(interval)
+    
+    return merged
+
+c) Test cases:
+
+# Test case 1
+intervals = [[1,3],[2,6],[8,10],[15,18]]
+# Expected output: [[1,6],[8,10],[15,18]]
+print(merge(intervals))
+
+# Test case 2
+intervals = [[1,4],[4,5]]
+# Expected output: [[1,5]]
+print(merge(intervals))
+
+d) Walkthrough:
+For test case 1:
+- The input is [[1,3],[2,6],[8,10],[15,18]].
+- After sorting, the intervals become [[1,3],[2,6],[8,10],[15,18]].
+- The first interval [1,3] is added to the merged list.
+- The second interval [2,6] overlaps with [1,3], so it is merged into [1,6].
+- The next intervals [8,10] and [15,18] do not overlap with the previous merged interval.
+- The final merged intervals are [[1,6],[8,10],[15,18]].
+
+e) Complexity:
+- Time complexity: O(n log n) due to sorting the intervals.
+- Space complexity: O(n) for the merged intervals list."

@@ -40,8 +40,8 @@ This project harnesses the power of OpenAI's GPT models to summarize LeetCode pr
    - Make sure you have your problem inputs ready in `prompt_arguments.csv`.
 
 6. **File Structure and Data Schemas:**
-   - `app.log`: Logs all runtime information, including progress updates and errors. Data schema: Timestamp, Log Level, Message.
-   - `prompts.log`: Stores detailed prompt templates used for each request. Data schema: Prompt Template, Problem.
+   - `logs/app.log`: Logs all runtime information, including progress updates and errors. Data schema: Timestamp, Log Level, Message.
+   - `logs/prompts.log`: Stores detailed prompt templates used for each request. Data schema: Prompt Template, Problem.
    - `prompt_arguments.csv`: Input file containing LeetCode problem descriptions. Should have a header named "problem" followed by rows containing individual problem descriptions or titles.
 
 ### Open AI Platform Issues
@@ -64,7 +64,7 @@ This project harnesses the power of OpenAI's GPT models to summarize LeetCode pr
 ## 🎶 A Fun Fact
 
 - 🎧: This README and the accompanying code were crafted while listening to some energetic techno beats! 🎶 Techno is love ❤️. 
-  - <img src="image.png" alt="Alt text" style="width: 15px; height: 15px;">  Check out some of my DJ mixes (Organic House, Melodic House and Techno) [here on Soundcloud](https://soundcloud.com/alirezadir)!
+  - <img src="imgs/soundlcloud.png" alt="Alt text" style="width: 15px; height: 15px;">  Check out some of my DJ mixes (Organic House, Melodic House and Techno) [here on Soundcloud](https://soundcloud.com/alirezadir)!
   - 🎧🎵 My current favorite track: [Simulation](https://open.spotify.com/playlist/3p52wFvY1hYMzjQJnkkfxW) *by "Anyma & Chris Avantgarde".*
 
 ## 🙌 Credits
