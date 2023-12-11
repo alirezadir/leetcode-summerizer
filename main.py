@@ -2,6 +2,7 @@
 LeetCode Problem Summarizer
 
 Author: Alireza Dirafzoon
+Co-author: ChatGPT
 Email: alireza.dirafzoon@gmail.com
 GitHub: https://github.com/alirezadir
 
@@ -18,7 +19,6 @@ Usage:
 - Run the script using: python3 main.py
 
 Enjoy practicing LeetCode more than ever!
-
 """
 
 import requests
@@ -27,29 +27,40 @@ import os
 import logging
 import csv
 
-# Create directories for logs and output if they do not exist
-os.makedirs('./logs', exist_ok=True)
-os.makedirs('./output', exist_ok=True)
+INPUT_FILE = 'input/prompt_arguments.csv'
+OUTPUT_FILE = 'output/chatgpt_responses.csv'
+LOG_FILE = 'logs/app.log'
+PROMPT_LOG_FILE = 'logs/prompts.log'
 
-# Setup logging to both file and console
+# Setup logging with different levels for file and console
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-fh = logging.FileHandler('./logs/app.log')  # File handler for logging to a file
-fh.setLevel(logging.INFO)
-ch = logging.StreamHandler()  # Console handler for logging to the console
-ch.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-ch.setFormatter(formatter)
+
+# File handler for detailed logging to a file
+fh = logging.FileHandler(LOG_FILE)
+fh.setLevel(logging.DEBUG)  # Set to DEBUG for more detailed logging
+file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+fh.setFormatter(file_formatter)
+
+# Console handler for logging to the console
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)  # Set to INFO for less detailed logging
+console_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+ch.setFormatter(console_formatter)
+
 logger = logging.getLogger()
 logger.addHandler(fh)
 logger.addHandler(ch)
 
+# Create directories for logs and output if they do not exist
+os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+
 # Function to log the prompt templates and arguments
-def store_prompt_log(prompt_template, problem, filename='./logs/prompts.log'):
+def store_prompt_log(prompt_template, problem, filename=PROMPT_LOG_FILE):
     with open(filename, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([prompt_template, problem])
-        logging.info("Prompt template and argument logged.")
+        logger.info("Prompt template and argument logged.")
 
 # Function to construct the prompt with detailed summarization tasks
 def construct_prompt(problem):
@@ -73,89 +84,98 @@ def construct_prompt(problem):
     store_prompt_log(prompt_template, problem)
     return prompt_template
 
-# Function to call the ChatGPT API for GPT-3.5-xxx models using the Chat Completion endpoint
+# Function to call the ChatGPT API for GPT-4 model
 def call_chatgpt_api(prompt):
     api_key = os.getenv('OPENAI_API_KEY')
     if not api_key:
-        logging.error("API key not found. Set the OPENAI_API_KEY environment variable.")
+        logger.error("API key not found. Set the OPENAI_API_KEY environment variable.")
         raise ValueError("API key not found. Set the OPENAI_API_KEY environment variable.")
     try:
-        logging.info("Request sent to OpenAI API. Waiting to hear back...")
+        logger.info("Request sent to OpenAI API. Waiting to hear back...")
         response = requests.post(
-            # chat_completions endpoint (Please check the API documentation for updated endpoints)
             url='https://api.openai.com/v1/chat/completions',
             headers={'Authorization': f'Bearer {api_key}'},
             json={
-                # 'gpt-3.5-turbo' is set as the default model
-                # you can switch to 'gpt-4' if available and preferred e.g. set 'model': 'gpt-4'
-                # each endpoint has a different set of models available to support 
-                'model': 'gpt-3.5-turbo',  # model name
-
+                # 'gpt-4' is set as the default model
+                # 'gpt-3.5-turbo' can also be used as an option
+                # you can switch to 'gpt-4' if available and preferred
+                'model': 'gpt-4',  # model name
                 # Using ChatML format for the request:
-                # - ChatML: allows for structured conversation-like exchanges.
-                #   - 'messages': a list where each entry represents one message in the conversation.
-                #   - Each message is a dict with 'role' and 'content'.
-                #       - 'role': 'user' signifies this message is from the user to the model.
-                #       - 'content': The actual content of the message, here being the prompt.
+                # ChatML allows for structured conversation-like exchanges.
+                # 'messages': a list where each entry represents one message in the conversation.
+                # Each message is a dict with 'role' and 'content'.
+                # 'role': 'user' signifies this message is from the user to the model.
+                # 'content': The actual content of the message, here being the prompt.
                 'messages': [{'role': 'user', 'content': prompt}]
             }
         )
         response.raise_for_status()
-        logging.info("Response received. Now start processing ...")
+        logger.info("Response received. Now start processing ...")
         response_text = response.json()['choices'][0]['message']['content'].strip()
-        # Format response with markdown header and Python code identifier
-        formatted_response = "# " + response_text.replace("```python", "\n# python\n```python")
+
+        # Formatting response with markdown for Python code
+        formatted_response = response_text
+        if "Python code:" in formatted_response:
+            formatted_response = formatted_response.replace("Python code:", "\n```python\n") + "\n```"
+
+        logger.debug(f"Response snippet: {formatted_response[:100]}")  # Logs first 100 characters of the response
+
         return formatted_response
     except requests.RequestException as e:
-        logging.error(f"An error occurred while calling the API: {e}")
+        logger.error(f"An error occurred while calling the API: {e}")
         return None
 
-# Function to store the response in a CSV file with a problem number
-def store_response_csv(problem_number, problem, response, filename='./output/chatgpt_responses.csv'):
+# Function to store the response in a CSV file
+def store_response_csv(problem_no, title, difficulty, response, filename=OUTPUT_FILE):
     with open(filename, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow([problem_number, problem, response])  # Storing problem number, problem, and response
-        logging.info("Current prompt processing successfully finished!")
+        writer = csv.writer(file, quoting=csv.QUOTE_ALL)  # QUOTE_ALL to quote all fields
+        # Escape double quotes in the response
+        escaped_response = response.replace('"', '""')
+        writer.writerow([problem_no, title, difficulty, escaped_response])
+        logger.info("Current prompt processing successfully finished!")
+
 
 def main():
-    logging.info("Starting main function")
+    logger.info("Starting main function")
 
     try:
-        prompts_df = pd.read_csv('prompt_arguments.csv')
+        prompts_df = pd.read_csv(INPUT_FILE)
+        prompts_df.fillna({
+            'Problem No': 'N/A',
+            'Title': '',
+            'Difficulty': 'Unknown',
+            'Tags': 'N/A',
+            'Status': 'N/A',
+            'Sort Order': 0
+        }, inplace=True)
 
-        # Initialize CSV files with headers
-        with open('./output/chatgpt_responses.csv', mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(['No.', 'problem', 'response'])  # Header for response CSV
+        if 'Title' not in prompts_df.columns:
+            raise Exception("Title column missing in the input file.")
 
-        with open('./logs/prompts.log', mode='w', newline='', encoding='utf-8') as file:
+        with open(OUTPUT_FILE, mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
-            writer.writerow(['prompt_template', 'problem'])  # Header for prompt log CSV
+            writer.writerow(['Problem No', 'Title', 'Difficulty', 'response'])
 
         total_rows = len(prompts_df)
         batch_size = 5  # Adjustable batch size
         for i in range(0, total_rows, batch_size):
             batch = prompts_df.iloc[i:i+batch_size]
             for index, row in batch.iterrows():
-                problem = row['problem']
+                problem = row['Title']
                 prompt = construct_prompt(problem)
-                logging.info(f"Processing problem: {problem}")
+                logger.info(f"Processing problem: {problem}")
                 response = call_chatgpt_api(prompt)
                 if response:
-                    store_response_csv(index + 1, problem, response)
+                    store_response_csv(row['Problem No'], problem, row['Difficulty'], response)
 
-            # Logging progress
             processed = min(i + batch_size, total_rows)
-            percent_complete = (processed / total_rows) * 100
-            logging.info(f"Progress: {processed}/{total_rows} rows processed ({percent_complete:.2f}%)")
+            bar_length = 20
+            bar = '#' * int(bar_length * (processed / total_rows)) + '.' * (bar_length - int(bar_length * (processed / total_rows)))
+            logger.info(f"Progress: {processed}/{total_rows} [{bar}] ({(processed / total_rows) * 100:.2f}%)")
 
-        logging.info(
-           "Main function finished successfully! "
-            "Note: this doesn't necessarily indicate task success! "
-            "Check the logs/app.log and output/chatgpt_responses.csv file for results!"
-        )
+        logger.info("Main function finished successfully!")
     except Exception as e:
-        logging.error(f"Error in main function: {e}")
+        logger.error(f"Error in main function: {e}")
 
 if __name__ == "__main__":
     main()

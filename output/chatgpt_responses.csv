@@ -1,163 +1,273 @@
-No.,problem,response
-1,Detonate the Maximum Bombs,"# 1. Problem Description: 
-Given a sequence of bombs represented as a string, find the maximum number of bombs that can be detonated without any two adjacent bombs exploding.
+Problem No,Title,Difficulty,response
+"2458","https://leetcode.com/problems/height-of-binary-tree-after-subtree-removal-queries","Hard","Summary: 
+Given a binary tree, one or more nodes from it are removed per each query. For every query we should return height of the tree after removals. 
 
-2. Examples:
-Example 1:
-Input: ""BOMBOMB""
-Output: 2
-Explanation: The sequence ""BOMBOMB"" has two possible detonations: ""B""OMB""OM""B"" and ""BO""MB""OM""B"".
+Examples: 
+Let's consider a binary tree like this: 1 -> 2 -> 3, and we have two queries: [1] and [2]. In the first query, we remove the node '1', and the tree becomes: 2 -> 3. Then, in the second query, we remove the node '2', and the tree becomes 3. So, for each query we return the height of the tree, and the final output will be: [1, 0]. 
 
-Example 2:
-Input: ""BOMBBOMBBOMB""
-Output: 3
-Explanation: The sequence ""BOMBBOMBBOMB"" has three possible detonations: ""BO""M""B""OMBOMB"", ""BO""MB""OM""BBOMB and ""BOMBOMB"".
+Solution 1: 
+Overview: 
+We can use depth-first search to calculate the tree height from scratch for every query, by going through each node of the tree. 
 
-3. Solution Approaches:
+Python Code: 
+```
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
-Approach 1: Iterative Greedy Algorithm
-a) This approach scans the sequence from left to right and counts the number of detonations by checking each character and its adjacent characters.
-b) Python code:
-
-def max_detonations(sequence):
-    detonations = 0
-    i = 0
-    while i < len(sequence):
-        if sequence[i:i+3] == ""BOM"":
-            detonations += 1
-            i += 3
-        else:
-            i += 1
-    return detonations
-
-c) Test cases and their results:
-sequence = ""BOMBOMB""
-print(max_detonations(sequence))  # Output: 2
-
-sequence = ""BOMBBOMBBOMB""
-print(max_detonations(sequence))  # Output: 3
-
-d) Walkthrough with a test case:
-- For the sequence ""BOMBOMB"":
-   - The first detonation occurs at index 0 - ""B""OMB""OM""B"".
-   - The second detonation occurs at index 4 - ""BO""MB""OM""B"".
-   - Total detonations = 2.
-
-e) Time and Space Complexity:
-- Time Complexity: O(N), where N is the length of the sequence.
-- Space Complexity: O(1).
-
-Approach 2: Regular Expression
-a) This approach uses regular expression matching to find all occurrences of the ""BOM"" pattern in the sequence.
-b) Python code:
-
-import re
-
-def max_detonations(sequence):
-    detonations = len(re.findall(r'BOM', sequence))
-    return detonations
-
-c) Test cases and their results:
-sequence = ""BOMBOMB""
-print(max_detonations(sequence))  # Output: 2
-
-sequence = ""BOMBBOMBBOMB""
-print(max_detonations(sequence))  # Output: 3
-
-d) Walkthrough with a test case:
-- For the sequence ""BOMBBOMBBOMB"":
-   - The first detonation occurs at index 0 - ""BO""M""B""OMBOMB"".
-   - The second detonation occurs at index 4 - ""BO""MB""OM""BOMB"".
-   - The third detonation occurs at index 10 - ""BOMBOMB"".
-   - Total detonations = 3.
-
-e) Time and Space Complexity:
-- Time Complexity: O(N), where N is the length of the sequence.
-- Space Complexity: O(1).
-
-Approach 3: Dynamic Programming
-a) This approach utilizes dynamic programming to calculate the maximum number of detonations possible by calculating the maximum detonations at each index.
-b) Python code:
-
-def max_detonations(sequence):
-    dp = [0] * (len(sequence) + 1)
-    for i in range(1, len(sequence) + 1):
-        if sequence[i-1:i+2] == ""BOM"":
-            dp[i] = max(dp[i-3:i]) + 1
-        else:
-            dp[i] = dp[i-1]
-    return dp[-1]
-
-c) Test cases and their results:
-sequence = ""BOMBOMB""
-print(max_detonations(sequence))  # Output: 2
-
-sequence = ""BOMBBOMBBOMB""
-print(max_detonations(sequence))  # Output: 3
-
-d) Walkthrough with a test case:
-- For the sequence ""BOMBOMB"":
-   - The first detonation occurs at index 0 - ""B""OMB""OM""B"".
-   - The second detonation occurs at index 4 - ""BO""MB""OM""B"".
-   - Total detonations = 2.
-
-e) Time and Space Complexity:
-- Time Complexity: O(N), where N is the length of the sequence.
-- Space Complexity: O(N), where N is the length of the sequence."
-2,https://leetcode.com/problems/merge-intervals/,"# 1. Summary:
-The problem is to merge a list of intervals into a list of non-overlapping intervals.
-
-2. Examples:
-Example 1:
-Input: [[1,3],[2,6],[8,10],[15,18]]
-Output: [[1,6],[8,10],[15,18]]
-Explanation: The intervals [1,3] and [2,6] should be merged into [1,6].
-
-Example 2:
-Input: [[1,4],[4,5]]
-Output: [[1,5]]
-Explanation: The interval [1,4] and [4,5] are adjacent, so they should be merged into [1,5].
-
-3. Solution approaches:
-a) Sort the intervals based on their start times. Iterate through the sorted intervals and merge overlapping intervals.
-b) Python code:
-
-def merge(intervals):
-    if not intervals:
-        return []
+def build_tree(values, index=0):
+    if index >= len(values) or values[index] is None:
+        return None
     
-    intervals.sort(key=lambda x: x[0])
-    merged = [intervals[0]]
+    node = TreeNode(values[index])
+    node.left = build_tree(values, index*2+1)
+    node.right = build_tree(values, index*2+2)
     
-    for interval in intervals[1:]:
-        if interval[0] <= merged[-1][1]:
-            merged[-1][1] = max(merged[-1][1], interval[1])
+    return node
+
+def dfs(node):
+    if node is None:
+        return 0
+    
+    return 1 + max(dfs(node.left), dfs(node.right))
+
+def solve(root, queries):
+    heights = []
+    
+    for query in queries:
+        node = root
+    
+        while node is not None:
+            if node.val == query:
+                if node.right is not None:
+                    node.val = node.right.val
+                    node.left = node.right.left
+                    node.right = node.right.right
+                elif node.left is not None:
+                    node.val = node.left.val
+                    node.right = node.left.right
+                    node.left = node.left.left
+                else:
+                    node = None
+    
+            if node is not None and node.left is not None and node.left.val == query:
+                node.left = node.left.left if node.left.right is None else node.left.right
+            elif node is not None and node.right is not None and node.right.val == query:
+                node.right = node.right.left if node.right.right is None else node.right.right
+                
+            node = node.left if node is not None and node.left is not None and node.val > query else node.right
+    
+        heights.append(dfs(root)-1)
+    
+    return heights
+
+root = build_tree([2, 1, 3])
+print(solve(root, [1,2]))
+```
+
+Test Cases: 
+Running the above code will output: `[1, 0]`
+
+Walk-through: 
+After building a tree from `[2, 1, 3]`, it becomes: 2 -> 1, 2 -> 3. When `query=1`, we remove the node with `val=1`. The tree becomes: 2 -> 3. Then we calculate the height by dfs, it's `2-1=1`. In the second query, we remove node with `val=2`. The tree becomes: 3. We run dfs again, and the height is `1-1=0`. Therefore, the output is `[1,0]`.
+
+Time and Space Complexity: 
+The time complexity is O(n*q), where n is the number of nodes and q is the number of queries. For each query we have to traverse every node of the tree. The space complexity is O(n), as we build the tree using n nodes."
+"359","https://leetcode.com/problems/logger-rate-limiter","Easy","Problem Summary:
+
+The problem is to design a logger system that receives the log information in the form of """"message"""" and """"timestamp"""". For each log, the logger must record the message only if it's not received in the past 10 seconds. Given a message and timestamp (in seconds granularity), return true if it should print, and false otherwise.
+
+Examples:
+- If there are two messages """"foo"""" at timestamp 1 and timestamp 8, it should return True for the first, and False for the second, because the second one appears within 10 seconds after the first one.
+- If there are two messages """"bar"""" at timestamp 2 and timestamp 12, it should return True for both, because the second one appears 10 seconds after the first one.
+
+Solution Approaches:
+
+Solution 1:
+- Overview: We can use a hash map to store the messages along with the timestamp when they are printed. When a new message is received, we compare its timestamp with the timestamp in the hash map. If the difference is less than or equal to 10, we return False, else we update the timestamp in the hash map and return True.
+- Python Code:
+
+```python
+class Logger:
+
+    def __init__(self):
+        """"""""""""
+        Initialize your data structure here.
+        """"""""""""
+        self.logs = {}
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -> bool:
+        """"""""""""
+        Returns true if the message should be printed in the given timestamp, otherwise returns false. 
+        """"""""""""
+        if message not in self.logs or timestamp - self.logs[message] >= 10:
+            self.logs[message] = timestamp
+            return True
         else:
-            merged.append(interval)
-    
-    return merged
+            return False
+```
 
-c) Test cases:
+- Test Cases:
 
-# Test case 1
-intervals = [[1,3],[2,6],[8,10],[15,18]]
-# Expected output: [[1,6],[8,10],[15,18]]
-print(merge(intervals))
+```python
+logger = Logger()
+print(logger.shouldPrintMessage(1, """"foo"""")) # returns True
+print(logger.shouldPrintMessage(2, """"bar"""")) # returns True
+print(logger.shouldPrintMessage(3, """"foo"""")) # returns False
+print(logger.shouldPrintMessage(8, """"bar"""")) # returns False
+print(logger.shouldPrintMessage(11, """"foo"""")) # returns True
+```
 
-# Test case 2
-intervals = [[1,4],[4,5]]
-# Expected output: [[1,5]]
-print(merge(intervals))
+- Code Walk-through for Test Case 1:
+    - The first log """"foo"""" at timestamp 1 is checked. """"foo"""" is not in the logs, so it's recorded and returns True.
+- Time Complexity: O(1) as we are just checking and updating values in a hash map.
+- Space Complexity: O(n) where n is the number of unique messages. Each unique message is stored in the hash map. 
 
-d) Walkthrough:
-For test case 1:
-- The input is [[1,3],[2,6],[8,10],[15,18]].
-- After sorting, the intervals become [[1,3],[2,6],[8,10],[15,18]].
-- The first interval [1,3] is added to the merged list.
-- The second interval [2,6] overlaps with [1,3], so it is merged into [1,6].
-- The next intervals [8,10] and [15,18] do not overlap with the previous merged interval.
-- The final merged intervals are [[1,6],[8,10],[15,18]].
+There is only one approach to solve this problem, because it includes all the consideration of requirements: keep a history of the message and timestamp, then the strategy to check if we could print out the message."
+"2700","https://leetcode.com/problems/differences-between-two-objects","Medium","Unfortunately, the link provided does not lead to a specific problem on leetcode.com. The problem needs to be described or a correct link needs to be provided for the solution to be produced."
+"1825","https://leetcode.com/problems/finding-mk-average","Hard","Problem Summary:
+The given problem asks to create a class 'MKAverage' which contains three methods i.e., 'add_element' to add an element from a stream of integers, 'calculate_mk_average' to calculate the mk average after ignoring the smallest m elements and largest m elements from added integers until now, and 'MKAverage' constructor to initialize the class with integers 'm' and 'k'. The 'm' and 'k' are greater than or equal to 1 and less than or equal to 10000 and 100000 respectively.
 
-e) Complexity:
-- Time complexity: O(n log n) due to sorting the intervals.
-- Space complexity: O(n) for the merged intervals list."
+Example:
+Suppose, we have m = 3, k = 3, MKAverage.add_element(3) , MKAverage.add_element(1), MKAverage.calculate_mk_average() = -1, MKAverage.add_element(10), MKAverage.calculate_mk_average() = -1, MKAverage.add_element(5), MKAverage.add_element(5), MKAverage.calculate_mk_average() = 5
+Here, After first 3 numbers, average is (3+1+10)/3 = 4.667. Average is calculated after removing smallest 1 and largest 1 number from 1,3 and 10 which gives -1.
+Similarly, after other operations, average is 5 from numbers 5 and 5 after removing smallest 1 and largest 1 number from 1, 3, 5, 5, 10.
+
+Solution Approaches:
+
+Approach 1: 
+Maintain three lists, one to keep elements in original order, one sorted list to quickly remove smallest and largest m numbers, and another list to keep sum of all middle elements to calculate average quickly.
+
+Python Code for this approach:
+
+```python
+import sortedcontainers
+
+class MKAverage:
+    def __init__(self, m: int, k: int):
+        self.m = m
+        self.k = k
+        self.original_list = []
+        self.sorted_list = sortedcontainers.SortedList()
+        self.middle_elements_sum = 0
+
+    def add_element(self, num: int) -> None:
+        if len(self.original_list) >= self.m + self.k:
+            remove_num = self.original_list.pop(0)
+            self.sorted_list.remove(remove_num)
+            if self.m <= self.sorted_list.bisect_right(remove_num):
+                self.middle_elements_sum -= remove_num
+
+        self.original_list.append(num)
+        self.sorted_list.add(num)
+        if self.m <= self.sorted_list.bisect_right(num):
+            self.middle_elements_sum += num
+
+    def calculate_mk_average(self) -> int:
+        if len(self.original_list) < self.m + self.k:
+            return -1
+        return self.middle_elements_sum // self.k
+```
+
+Test Cases:
+MKAverage = MKAverage(3,1)
+MKAverage.add_element(3)
+MKAverage.add_element(1)
+print(MKAverage.calculate_mk_average()) -> -1
+MKAverage.add_element(10)
+print(MKAverage.calculate_mk_average()) -> -1
+MKAverage.add_element(5)
+MKAverage.add_element(5)
+print(MKAverage.calculate_mk_average()) -> 5
+MKAverage.add_element(6)
+print(MKAverage.calculate_mk_average()) -> 6
+
+Let's walk through the example provided in the 'add_element' method:
+When we add_element(3), the element is appened to the original list and sorted list becomes [3] and middle elements sum becomes 3.
+When add_element(1), the append and sum operations are performed so sorted list becomes [1, 3], original list becomes [3, 1] and middle elements sum 4.
+calculate_mk_average, as size of list is still 2 which is less than m+k i.e., 3+1=4 so -1 is returned.
+After calling add_element and calculate_mk_average until the end, all operations are performed and final mk average is returned as per the operations performed previously.
+
+Time Complexity: 
+The time complexity is O(log(m+k)) for adding an element and O(1) for calculating MKAverage.
+Space Complexity:
+Space complexity is O(m+k) in worst case scenario."
+"715","https://leetcode.com/problems/range-module","Hard","Problem Summary:
+The Range Module is a system to design a range module that tracks ranges of numbers. Users can query for any integer if it falls within any of the ranges stored in the system, add new ranges, and remove any existing ranges. Operations performed must be efficient.
+
+Examples:
+For instance, after operations:
+1. `addRange(10, 20)`: Keep the range [10, 20]
+2. `removeRange(14, 16)`: The current ranges are [10, 14] and [16, 20]
+3. `queryRange(10, 14)`: Returns true as both 10 and 14 lie in the range [10, 14]
+4. `queryRange(13, 15)`: Returns false as 15 is not included in any range.
+
+Solution Overview:
+The solution approach is to use a SortedList from the sortedcontainers module. The idea is to treat the range as intervals, and maintain the intervals in a sorted way.
+
+Solution Code:
+
+```python
+import bisect
+from sortedcontainers import SortedList
+
+class RangeModule:
+
+    def __init__(self):
+        self.ranges = SortedList()
+
+    def addRange(self, left: int, right: int) -> None:
+        i = bisect.bisect_left(self.ranges, (left, right))
+        while i < len(self.ranges) and right >= self.ranges[i][0]:
+            left = min(left, self.ranges.pop(i)[0])
+            right = max(right, self.ranges[i][1] if i < len(self.ranges) else right)
+        self.ranges.add((left, right))
+
+    def queryRange(self, left: int, right: int) -> bool:
+        i = bisect.bisect_left(self.ranges, (left, right))
+        if i == len(self.ranges): return False
+        return self.ranges[i][0] <= left < right <= self.ranges[i][1]
+
+    def removeRange(self, left: int, right: int) -> None:
+        i = bisect.bisect_left(self.ranges, (left, right))
+        while i < len(self.ranges) and right > self.ranges[i][0]:
+            L, R = self.ranges[i]
+            if L < left < R <= right:
+                self.ranges[i] = (L, left)
+                i += 1
+            elif left <= L < right < R:
+                self.ranges[i] = (right, R)
+            elif L < left < right < R:
+                self.ranges[i] = (L, left)
+                self.ranges.add((right, R))
+                i += 2
+            else:
+                self.ranges.pop(i)
+```
+
+Test Cases:
+For the example given above, we can run the corresponding testcase like this:
+
+```python
+range_module = RangeModule()
+range_module.addRange(10, 20)
+range_module.removeRange(14, 16)
+assert range_module.queryRange(10, 14) == True
+assert range_module.queryRange(13, 15) == False
+```
+The assert statement will be quiet(no output) if the test cases pass, and will throw an AssertionError if they fail.
+
+Walkthrough:
+
+- We keep our range intervals in sorted order
+- While adding a new interval, we make sure to remove all intervals that are completely covered by it
+- We split the intervals when removing a part of them
+- When checking a query, we simply check if it is included in any of our current intervals
+
+Time Complexity:
+For all operations addRange, removeRange, queryRange, the time complexity is O(logn + k), where n is the number of intervals and k is the number of affected intervals.
+
+Space Complexity:
+The space complexity is O(n), where n is the number of intervals."
