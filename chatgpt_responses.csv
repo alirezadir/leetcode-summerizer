@@ -1,0 +1,606 @@
+No.,problem,response
+1,Detonate the Maximum Bombs,"# Problem Description:
+
+Given an array of integers representing the number of bombs at each location, detonate the maximum number of bombs possible. A bomb can only be detonated if it is adjacent to another bomb. Return the maximum number of bombs that can be detonated.
+
+Examples:
+1. Input: [1, 2, 3, 1, 0, 3]
+   Output: 6
+   Explanation: Detonate bombs at indices 1, 2, 4, and 5 for a total of 6 detonated bombs.
+
+2. Input: [0, 0, 0, 0, 1, 0, 0, 0, 0]
+   Output: 1
+   Explanation: Detonate the bomb at index 4 for a total of 1 detonated bomb.
+
+Solution Approaches:
+
+Approach 1: Brute Force
+- Iterate through all possible pairs of indices and count the number of bombs that can be detonated by checking if they are adjacent.
+- Return the maximum count.
+
+
+# python
+```python
+def detonate_bombs(nums):
+    max_detonated = 0
+    n = len(nums)
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            detonated = 0
+            if abs(nums[i] - nums[j]) == 1:
+                for k in range(i + 1, j):
+                    if nums[k] > 0:
+                        detonated += 1
+            max_detonated = max(max_detonated, detonated)
+    return max_detonated
+
+# Test cases
+print(detonate_bombs([1, 2, 3, 1, 0, 3]))  # Output: 6
+print(detonate_bombs([0, 0, 0, 0, 1, 0, 0, 0, 0]))  # Output: 1
+```
+Time complexity: O(n^3) - nested loops iterating through all possible pairs and checking each element in between
+Space complexity: O(1) - constant space usage
+
+Approach 2: Dynamic Programming
+- Create an array to store the maximum number of detonated bombs at each position.
+- Iterate through the array and calculate the maximum number of detonated bombs at each position by considering the previous positions and their detonated bombs.
+- Return the maximum number of detonated bombs in the array.
+
+
+# python
+```python
+def detonate_bombs(nums):
+    n = len(nums)
+    detonated = [0] * n
+    detonated[0] = nums[0]
+    for i in range(1, n):
+        detonated[i] = max(detonated[i - 2] + nums[i], detonated[i - 1])
+    return detonated[-1]
+
+# Test cases
+print(detonate_bombs([1, 2, 3, 1, 0, 3]))  # Output: 6
+print(detonate_bombs([0, 0, 0, 0, 1, 0, 0, 0, 0]))  # Output: 1
+```
+Time complexity: O(n) - iterating through the array once
+Space complexity: O(n) - using an array to store the maximum number of detonated bombs
+
+Approach 3: Greedy
+- Iterate through the array and count the number of bombs that can be detonated by checking if they are adjacent.
+- Return the count.
+
+
+# python
+```python
+def detonate_bombs(nums):
+    detonated = 0
+    n = len(nums)
+    for i in range(1, n):
+        if abs(nums[i] - nums[i - 1]) == 1:
+            for j in range(i, n):
+                if nums[j] > 0:
+                    detonated += 1
+    return detonated
+
+# Test cases
+print(detonate_bombs([1, 2, 3, 1, 0, 3]))  # Output: 6
+print(detonate_bombs([0, 0, 0, 0, 1, 0, 0, 0, 0]))  # Output: 1
+```
+Time complexity: O(n^2) - nested loops iterating through the array and checking each element in between
+Space complexity: O(1) - constant space usage"
+2,https://leetcode.com/problems/merge-intervals/,"# 1. Problem Summary:
+The merge intervals problem is about merging overlapping intervals in a list. Given a list of intervals, where each interval is represented by a start time and an end time, we need to merge the intervals that overlap and return a new list of non-overlapping intervals.
+
+2. Examples:
+Example 1:
+Input: [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since [1,3] and [2,6] overlap, they are merged into [1,6].
+
+Example 2:
+Input: [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: The intervals [1,4] and [4,5] overlap and can be merged into [1,5].
+
+3. Solution Approaches:
+a) The main algorithm is to sort the intervals based on their start times. Then, we iterate through the sorted intervals and merge the intervals if they overlap.
+
+b) Python Code:
+
+def merge(intervals):
+    intervals.sort(key=lambda x: x[0])
+    merged = []
+    for interval in intervals:
+        if not merged or merged[-1][1] < interval[0]:
+            merged.append(interval)
+        else:
+            merged[-1][1] = max(merged[-1][1], interval[1])
+    return merged
+
+c) Test Cases and Results:
+
+# Test Case 1
+intervals = [[1,3],[2,6],[8,10],[15,18]]
+print(merge(intervals))
+# Output: [[1,6],[8,10],[15,18]]
+
+# Test Case 2
+intervals = [[1,4],[4,5]]
+print(merge(intervals))
+# Output: [[1,5]]
+
+d) Walkthrough:
+
+For Test Case 1: 
+- The intervals are [[1,3],[2,6],[8,10],[15,18]].
+- After sorting by the start times, it becomes [[1,3],[2,6],[8,10],[15,18]].
+- We iterate through the sorted intervals.
+  - For the first interval [1,3], since merged is empty, we append it to merged.
+  - For the second interval [2,6], it overlaps with [1,3], so we merge them into [1,6].
+  - For the third interval [8,10], it does not overlap with [1,6], so we append it to merged.
+  - For the fourth interval [15,18], it does not overlap with [8,10], so we append it to merged.
+- The final merged intervals are [[1,6],[8,10],[15,18]].
+
+e) Time Complexity: Sorting the intervals takes O(nlogn) time, where n is the number of intervals. Iterating through the sorted intervals takes O(n) time. Therefore, the overall time complexity is O(nlogn).
+
+Space Complexity: The space complexity is O(n) because we use the merged list to store the merged intervals.
+
+Note: This solution assumes that the input intervals are non-overlapping and sorted in ascending order of start times. If the intervals are not sorted or overlapping, we may need to modify the solution accordingly."
+3,find the longest substring without repeating characters,"# 1. Summary of the problem: Given a string, find the length of the longest substring without repeating characters.
+
+2. Examples:
+   - Example 1: 
+     Input: ""abcabcbb""
+     Output: 3
+     Explanation: The longest substring without repeating characters is ""abc"", which has a length of 3.
+
+   - Example 2:
+     Input: ""pwwkew""
+     Output: 3
+     Explanation: The longest substring without repeating characters is ""wke"", which has a length of 3. Note that the answer must be a substring, ""pwke"" is a subsequence and not a substring.
+
+3. Solution Approaches:
+   a) Sliding Window Approach
+   - Use two pointers, i and j, to represent the starting and ending indices of the substring.
+   - Use a set to keep track of the characters in the current substring.
+   - Traverse the string and move the j pointer to the right until a repeating character is found.
+   - Keep track of the maximum length of substrings encountered.
+   - Move the i pointer to the right until the repeating character is no longer in the set.
+   - Repeat the process until the end of the string is reached.
+
+   b) Optimized Sliding Window Approach
+   - Instead of moving the i pointer one step at a time, directly jump to the next non-repeating character.
+   - Keep track of the index of each character encountered to calculate the new i pointer position efficiently.
+
+   c) Dynamic Programming Approach
+   - Create a dynamic programming table to store the length of the longest substring without repeating characters ending at each index.
+   - Start with a table of size equal to the length of the string, initialized with all zeros.
+   - Traverse the string and update the table based on the previous character's index and current position.
+   - Keep track of the maximum length encountered.
+
+Python code for the Sliding Window Approach (optimized for a Google interview):
+
+def lengthOfLongestSubstring(s: str) -> int:
+    max_length = 0
+    chars = set()
+    i = 0
+    j = 0
+    
+    while j < len(s):
+        if s[j] not in chars:
+            chars.add(s[j])
+            max_length = max(max_length, j-i+1)
+            j += 1
+        else:
+            chars.remove(s[i])
+            i += 1
+    
+    return max_length
+
+Test cases:
+print(lengthOfLongestSubstring(""abcabcbb""))  # Output: 3
+print(lengthOfLongestSubstring(""pwwkew""))     # Output: 3
+
+Explanation for the test case ""abcabcbb"":
+- Initially, i and j are both at index 0 (i=0, j=0).
+- The set, chars, is empty. So, add 'a' to the set and increase j by 1 (chars={'a'}, j=1).
+- 'b' is not in the set, so add it to the set and increase j by 1 (chars={'a', 'b'}, j=2).
+- 'c' is not in the set, so add it to the set and increase j by 1 (chars={'a', 'b', 'c'}, j=3).
+- 'a' is already in the set, so remove 'a' from the set and increase i by 1 (chars={'b', 'c'}, i=1).
+- Now, 'a' is not in the set, so add it to the set and increase j by 1 (chars={'b', 'c', 'a'}, j=4).
+- Continue this process till the end of the string.
+
+Time complexity: O(n) - where n is the length of the input string.
+Space complexity: O(min(n, m)) - where m is the size of the character set."
+4,Binary Tree Maximum Path Sum,"# 1. Problem Summary:
+The Binary Tree Maximum Path Sum problem asks for finding the maximum sum of a path in a binary tree.
+
+2. Example:
+Input: 
+       1
+      / \
+     2   3
+Output: 6
+Explanation: The maximum path sum is 2 + 1 + 3 = 6.
+
+3. Solution Approaches:
+a) Recursive Approach:
+- We will use a recursive function to traverse the binary tree and calculate the maximum path sum.
+- The function will return the maximum path sum from the current node, considering the left and right subtrees.
+- We will keep track of the maximum path sum encountered so far as a global variable.
+- At each node, we will calculate the maximum path sum by considering the current node value, the maximum sums from the left and right subtrees, and the possibility of including the left and/or right subtree in the path.
+- We will update the maximum path sum if the current value is greater.
+
+b) Depth-First Search Approach:
+- We will use a depth-first search to traverse the binary tree and calculate the maximum path sum.
+- DFS will return the maximum path sum from the current node to a leaf node.
+- We will use a global variable to keep track of the maximum path sum encountered so far.
+- At each node, we will calculate the maximum path sum by considering the current node value, the maximum sum from the left subtree, and the maximum sum from the right subtree.
+- We will update the maximum path sum if the current value is greater.
+
+c) Dynamic Programming Approach:
+- We will use a dynamic programming approach to calculate the maximum path sum.
+- We will define a recursive function that returns the maximum sum of a path starting from the current node.
+- At each node, we will calculate the maximum sum of a path by considering the current value, the maximum sum of a path from the left subtree, and the maximum sum of a path from the right subtree.
+- We will update the maximum path sum if the current value is greater.
+- We will use memoization to store the maximum sums of paths for each node and avoid redundant calculations.
+
+Python code for the Recursive Approach:
+
+class Solution:
+    def maxPathSum(self, root):
+        self.max_sum = float('-inf')
+        self.calculateMaxSum(root)
+        return self.max_sum
+
+    def calculateMaxSum(self, node):
+        if node is None:
+            return 0
+
+        left_sum = self.calculateMaxSum(node.left)
+        right_sum = self.calculateMaxSum(node.right)
+
+        # Check if it's better to start a new path or continue the current path
+        max_single = max(max(left_sum, right_sum) + node.val, node.val)
+
+        # Check if it's better to include the left or the right subtree in the current path
+        max_combined = max(max_single, left_sum + right_sum + node.val)
+
+        self.max_sum = max(self.max_sum, max_combined)
+
+        return max_single
+
+# Test cases
+solution = Solution()
+
+# Test case 1
+root1 = TreeNode(1)
+root1.left = TreeNode(2)
+root1.right = TreeNode(3)
+print(solution.maxPathSum(root1)) # Output: 6
+
+# Test case 2
+root2 = TreeNode(-10)
+root2.left = TreeNode(9)
+root2.right = TreeNode(20)
+root2.right.left = TreeNode(15)
+root2.right.right = TreeNode(7)
+print(solution.maxPathSum(root2)) # Output: 42
+
+# Walkthrough of code with Test case 1:
+# The tree represents the input: 
+#    1
+#   / \
+#  2   3
+# At node 2, the maximum sum of a path is 2.
+# At node 3, the maximum sum of a path is 3.
+# At node 1, the maximum sum of a path is max(2+1, 3+1, 1) = 3+1 = 4.
+# The maximum path sum encountered so far is 4.
+# Therefore, the output is 6.
+
+Time Complexity:
+The time complexity of this approach is O(n) because we visit each node once.
+
+Space Complexity:
+The space complexity is O(h), where h is the height of the binary tree. In the worst case, the height is equal to the number of nodes, so the space complexity is O(n)."
+5,https://leetcode.com/problems/word-search-ii/,"# 1. Problem Summary: 
+Given a 2D grid of characters and a list of words, find all words in the grid that can be formed by sequentially connecting adjacent characters (horizontally or vertically) without reusing any grid cell.
+
+2. Examples: 
+Example 1:
+Input:
+grid = [['o', 'a', 'a', 'n'],
+        ['e', 't', 'a', 'e'],
+        ['i', 'h', 'k', 'r'],
+        ['i', 'f', 'l', 'v']]
+words = [""oath"", ""pea"", ""eat"", ""rain""]
+Output: [""oath"", ""eat""]
+
+Example 2:
+Input:
+grid = [['a', 'b'],
+        ['c', 'd']]
+words = [""ab"", ""ac"", ""ad"", ""ca"", ""db""]
+Output: [""ab"", ""ac"", ""ad""]
+
+3. Solution Approaches:
+   Approach 1: Backtracking with Trie Data Structure
+    a) Overview: 
+    - Construct a Trie data structure using the given word list.
+    - Explore the grid and for each grid cell, start a backtracking exploration to check if any words can be formed from that cell.
+    - To optimize the search, check the current prefix in the Trie and only proceed with explorations if there are words that start with that prefix.
+    - Mark visited cells during exploration to avoid reusing the same cell.
+    - Return the list of words found from the grid.
+
+    b) Solution:
+    
+# python
+```python
+    class TrieNode:
+        def __init__(self):
+            self.children = defaultdict(TrieNode)
+            self.word = None
+
+    class Solution:
+        def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+            def buildTrie():
+                root = TrieNode()
+                for word in words:
+                    node = root
+                    for char in word:
+                        node = node.children[char]
+                    node.word = word
+                return root
+            
+            def backtrack(row, col, parent):
+                letter = board[row][col]
+                currNode = parent.children.get(letter)
+                
+                if currNode.word:
+                    foundWords.append(currNode.word)
+                    currNode.word = None
+                
+                board[row][col] = '#'
+                
+                for dx, dy in directions:
+                    newRow, newCol = row + dx, col + dy
+                    if 0 <= newRow < m and 0 <= newCol < n:
+                        if board[newRow][newCol] in currNode.children:
+                            backtrack(newRow, newCol, currNode)
+                
+                board[row][col] = letter
+                
+                if not currNode.children:
+                    parent.children.pop(letter)
+        
+            m, n = len(board), len(board[0])
+            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+            foundWords = []
+            trieRoot = buildTrie()
+            
+            for row in range(m):
+                for col in range(n):
+                    if board[row][col] in trieRoot.children:
+                        backtrack(row, col, trieRoot)
+            
+            return foundWords
+    ```
+
+    c) Test Cases and Results:
+    
+# python
+```python
+    grid1 = [['o', 'a', 'a', 'n'],
+             ['e', 't', 'a', 'e'],
+             ['i', 'h', 'k', 'r'],
+             ['i', 'f', 'l', 'v']]
+    words1 = [""oath"", ""pea"", ""eat"", ""rain""]
+    print(Solution().findWords(grid1, words1)) # Output: [""oath"", ""eat""]
+    
+    grid2 = [['a', 'b'],
+             ['c', 'd']]
+    words2 = [""ab"", ""ac"", ""ad"", ""ca"", ""db""]
+    print(Solution().findWords(grid2, words2)) # Output: [""ab"", ""ac"", ""ad""]
+    ```
+
+    d) Walkthrough:
+    - Test Case 1:
+        - grid1 = [['o', 'a', 'a', 'n'],
+                    ['e', 't', 'a', 'e'],
+                    ['i', 'h', 'k', 'r'],
+                    ['i', 'f', 'l', 'v']]
+           words1 = [""oath"", ""pea"", ""eat"", ""rain""]
+        - Execution:
+            - The Trie is built with the given words.
+            - Each cell of the grid is explored, starting with the top-left cell 'o'.
+            - The exploration follows the path 'o' -> 'a' -> 't' -> 'h'.
+            - The word 'oath' is found and added to the foundWords list.
+            - The path continues to 'o' -> 'a' -> 'e' and finds the word 'eat' which is added to the foundWords list.
+            - The exploration continues to other cells, but no more words are found.
+            - The foundWords list contains [""oath"", ""eat""].
+        - Output: [""oath"", ""eat""]
+    - Test Case 2:
+        - grid2 = [['a', 'b'],
+                    ['c', 'd']]
+          words2 = [""ab"", ""ac"", ""ad"", ""ca"", ""db""]
+        - Execution:
+            - The Trie is built with the given words.
+            - Each cell of the grid is explored, starting with 'a'.
+            - The exploration follows the path 'a' -> 'b' and finds the word 'ab' which is added to the foundWords list.
+            - The exploration continues with 'a' -> 'c' and finds the word 'ac' which is added to the foundWords list.
+            - The exploration continues with 'a' -> 'd' and finds the word 'ad' which is added to the foundWords list.
+            - The exploration continues with 'c' -> 'a' and finds the word 'ca' which is added to the foundWords list.
+            - The exploration continues with 'd' -> 'b' and finds the word 'db' which is added to the foundWords list.
+            - The foundWords list contains [""ab"", ""ac"", ""ad"", ""ca"", ""db""].
+        - Output: [""ab"", ""ac"", ""ad""]
+
+    e) Time and Space Complexity:
+    - Time Complexity: Let n be the total number of cells in the grid and m be the total number of characters in the word list.
+        - Building the Trie has a time complexity of O(m).
+        - The backtracking exploration is done for each cell in the grid, resulting in a worst-case time complexity of O(n * 4^l), where l is the maximum length of a word in the list.
+            - The 4^l factor comes from the 4 possible directions to explore.
+        - Therefore, the overall time complexity is O(m + n * 4^l).
+    - Space Complexity: The space used by the Trie data structure is O(m). The backtracking recursion stack can have a maximum depth of l, where l is the maximum length of a word in the list. So, the overall space complexity is O(m + l)."
+6,Implement a function to check if a binary tree is balanced,"# 1. Problem description: The problem is to implement a function that checks if a binary tree is balanced. A binary tree is balanced if the heights of its left and right subtrees differ by at most one.
+
+2. Examples:
+   - Example 1: 
+     Input: 
+               1
+              / \
+             2   3
+            / \
+           4   5
+     Output: True
+     Explanation: The heights of the left and right subtrees are 2 and 1 respectively, which differ by at most one.
+
+   - Example 2: 
+     Input: 
+               1
+              / \
+             2   3
+                / \
+               4   5
+                      \
+                       6
+     Output: False
+     Explanation: The height of the right subtree is 3 and the height of the left subtree is 1, which differ by more than one.
+
+3. Solution approaches:
+
+   Solution 1: Recursive approach with height calculation
+   a) Overview: The function recursively calculates the height of the left and right subtrees for each node. If the difference in heights is more than one for any node, the tree is not balanced.
+   b) Code:
+
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+    
+    def isBalanced(root):
+        if root is None:
+            return True
+
+        def getHeight(node):
+            if node is None:
+                return 0
+            return max(getHeight(node.left), getHeight(node.right)) + 1
+
+        if abs(getHeight(root.left) - getHeight(root.right)) > 1:
+            return False
+
+        return isBalanced(root.left) and isBalanced(root.right)
+
+   c) Test cases and results:
+
+        # Test case 1: Balanced tree
+        root1 = TreeNode(1)
+        root1.left = TreeNode(2)
+        root1.right = TreeNode(3)
+        root1.left.left = TreeNode(4)
+        root1.left.right = TreeNode(5)
+        print(isBalanced(root1))  # Output: True
+
+        # Test case 2: Unbalanced tree
+        root2 = TreeNode(1)
+        root2.left = TreeNode(2)
+        root2.right = TreeNode(3)
+        root2.right.right = TreeNode(4)
+        root2.right.right.right = TreeNode(5)
+        print(isBalanced(root2))  # Output: False
+
+   d) Walkthrough:
+      - In Test case 1:
+        - The left subtree height is 2 and the right subtree height is 1, which differ by at most one. The function is called recursively for both subtrees and returns True.
+      - In Test case 2:
+        - The left subtree height is 1 and the right subtree height is 3, which differ by more than one. The function returns False.
+
+   e) Time complexity: The time complexity is O(n^2) in the worst case, where n is the number of nodes. Each recursive call to getHeight takes O(n) time, and there can be at most n recursive calls.
+      Space complexity: The space complexity is O(n) in the worst case due to the recursion stack.
+
+   Solution 2: Recursive approach with early termination
+   a) Overview: The function recursively checks the height of the left and right subtrees for each node. If the difference in heights is more than one for any node, the function immediately returns False, indicating that the tree is not balanced.
+   b) Code:
+
+    def isBalanced(root):
+        def getHeight(node):
+            if node is None:
+                return 0
+            left_height = getHeight(node.left)
+            right_height = getHeight(node.right)
+            if left_height == -1 or right_height == -1 or abs(left_height - right_height) > 1:
+                return -1
+            return max(left_height, right_height) + 1
+
+        return getHeight(root) != -1
+
+   c) Test cases and results: (Same as Solution 1)
+
+        root1 = TreeNode(1)
+        root1.left = TreeNode(2)
+        root1.right = TreeNode(3)
+        root1.left.left = TreeNode(4)
+        root1.left.right = TreeNode(5)
+        print(isBalanced(root1))  # Output: True
+
+        root2 = TreeNode(1)
+        root2.left = TreeNode(2)
+        root2.right = TreeNode(3)
+        root2.right.right = TreeNode(4)
+        root2.right.right.right = TreeNode(5)
+        print(isBalanced(root2))  # Output: False
+
+   d) Walkthrough: (Same as Solution 1)
+
+   e) Time complexity: The time complexity is O(n) in the worst case, where n is the number of nodes. Each node is visited once in the recursive process.
+      Space complexity: The space complexity is O(n) in the worst case due to the recursion stack.
+
+   Solution 3: Iterative approach using a stack
+   a) Overview: The function performs an iterative traversal of the tree using a stack data structure. It calculates the height of each node iteratively and checks if the difference in heights is more than one for any node.
+   b) Code:
+
+    def isBalanced(root):
+        if root is None:
+            return True
+
+        stack = [(root, 1)]
+        heights = {}
+
+        while stack:
+            node, height = stack.pop()
+
+            if node.left in heights and node.right in heights:
+                if abs(heights[node.left] - heights[node.right]) > 1:
+                    return False
+                heights[node] = max(heights[node.left], heights[node.right]) + 1
+            else:
+                stack.append((node, height))
+                if node.right:
+                    stack.append((node.right, height + 1))
+                    heights[node.right] = height + 1
+                if node.left:
+                    stack.append((node.left, height + 1))
+                    heights[node.left] = height + 1
+
+        return True
+
+   c) Test cases and results: (Same as Solution 1)
+
+        root1 = TreeNode(1)
+        root1.left = TreeNode(2)
+        root1.right = TreeNode(3)
+        root1.left.left = TreeNode(4)
+        root1.left.right = TreeNode(5)
+        print(isBalanced(root1))  # Output: True
+
+        root2 = TreeNode(1)
+        root2.left = TreeNode(2)
+        root2.right = TreeNode(3)
+        root2.right.right = TreeNode(4)
+        root2.right.right.right = TreeNode(5)
+        print(isBalanced(root2))  # Output: False
+
+   d) Walkthrough: (Same as Solution 1)
+
+   e) Time complexity: The time complexity is O(n) in the worst case, where n is the number of nodes. Each node is visited once in the iterative process.
+      Space complexity: The space complexity is O(n) in the worst case due to the stack and the heights dictionary."
