@@ -3,7 +3,9 @@ Summarize and collect into a DB a collection of LeetCode problems (Description, 
 
 ## 📣 News
 
-- My new e-book "LLMs Intro and System Design (2023 Edition)" covering the foundations of LLMs as well as System Design and Latest Updates in generative AI technology will appear soon [planned by Christmas 🎄]. Stay tuned!
+- My new e-book 📚  **LLMs: An Intro and System Design (2023 Edition)** will appear soon (by this Christmas 🎄, will be brought by Santa 🎅). 
+  - It will cover the foundations of LLMs, LLMs System Design,  and Latest Tools and Updates in Generative AI technology.
+  - Stay tuned! 🎁
 
 # 🚀 AI-Powered LeetCode Problem Summarizer
 
@@ -62,8 +64,8 @@ This project harnesses the power of OpenAI's GPT models to summarize LeetCode pr
 ## 🎶 A Fun Fact
 
 - 🎧: This README and the accompanying code were crafted while listening to some energetic techno beats! 🎶 Techno is love ❤️. 
-  - <img src="image.png" alt="Alt text" style="width: 20px; height: 20px;"> Check out some of my DJ mixes (Organic House, Melodic House and Techno) [here on Soundcloud](https://soundcloud.com/alirezadir)!
-- 🎧🎵 My current favorite track: [Simulation](https://open.spotify.com/playlist/3p52wFvY1hYMzjQJnkkfxW) *by "Anyma & Chris Avantgarde".*
+  - <img src="image.png" alt="Alt text" style="width: 15px; height: 15px;">  Check out some of my DJ mixes (Organic House, Melodic House and Techno) [here on Soundcloud](https://soundcloud.com/alirezadir)!
+  - 🎧🎵 My current favorite track: [Simulation](https://open.spotify.com/playlist/3p52wFvY1hYMzjQJnkkfxW) *by "Anyma & Chris Avantgarde".*
 
 ## 🙌 Credits
 
@@ -71,11 +73,11 @@ This project harnesses the power of OpenAI's GPT models to summarize LeetCode pr
 
 ## 🌟 Gratitude 
 
-🙏 I am deeply grateful for being where I am today and for the opportunity to share this work with you all. 🌍 It's been a long, challenging journey filled with excitement from the start to this point. I am thankful for all the gifts that the universe has brought to me, and I've discovered that living with gratitude is a profoundly transformative way of life. 🌈
+- 🙏 I am deeply grateful for being where I am today and for the opportunity to share this work with you all. 🌍 It's been a long, challenging journey filled with excitement from the start to this point. I am thankful for all the gifts that the universe has brought to me, and I've discovered that living with gratitude is a profoundly transformative way of life. 🌈
 
 > To speak gratitude is courteous and pleasant, to enact gratitude is generous and noble, but to live gratitude is to touch Heaven. – Johannes A. Gaertner (*German Art Historian, Professor of Art History*)
 
-🙏 Special thanks go to my very close friends who have always supported me throughout my journey. 
+- 🙏 Special thanks go to my very close friends who have always supported me throughout my journey. 
 
-🙏 I am also eternally grateful to all my teachers who have guided me from the very beginning until now. Their wisdom and support have been invaluable.
+- 🙏 I am also eternally grateful to all my teachers who have guided me from the very beginning until now. Their wisdom and support have been invaluable.
 
